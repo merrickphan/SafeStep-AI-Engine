@@ -1,0 +1,280 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--navy:#0D1B4B;--gold:#C9960C;--navy-light:#1a2d6b;--gold-light:#f0b429;--navy-faint:rgba(13,27,75,0.07);--gold-faint:rgba(201,150,12,0.12);}
+.db{padding:1rem 0;font-family:var(--font-sans);}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1.5px solid var(--navy-faint);}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-step{font-size:20px;font-weight:500;color:var(--navy);letter-spacing:-0.3px;}
+.brand-sense{font-size:20px;font-weight:500;color:var(--gold);letter-spacing:-0.3px;}
+.brand-tagline{font-size:10px;color:var(--navy);opacity:0.45;letter-spacing:0.05em;margin-top:1px;font-style:italic;}
+.live-chip{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--navy);padding:4px 12px;border-radius:20px;border:1px solid rgba(13,27,75,0.18);background:var(--navy-faint);}
+.dot-pulse{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:glow 1.6s infinite;}
+@keyframes glow{0%,100%{opacity:1}50%{opacity:0.25}}
+.battery-wrap{display:flex;align-items:center;gap:7px;}
+.battery-label{font-size:11px;color:var(--navy);opacity:0.5;}
+.battery-body{position:relative;width:36px;height:18px;border:1.5px solid rgba(13,27,75,0.35);border-radius:3px;display:flex;align-items:center;padding:2px;}
+.battery-body::after{content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:3px;height:8px;background:rgba(13,27,75,0.3);border-radius:0 2px 2px 0;}
+.battery-fill{height:100%;border-radius:1px;transition:width 0.4s ease;}
+.battery-pct{font-size:11px;font-weight:500;color:var(--navy);}
+.section-label{font-size:10px;font-weight:500;letter-spacing:0.1em;color:var(--navy);opacity:0.4;text-transform:uppercase;margin-bottom:10px;}
+.mgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:1.25rem;}
+.mc{background:#fff;border:1px solid rgba(13,27,75,0.1);border-radius:10px;padding:12px 14px;cursor:pointer;position:relative;transition:border-color 0.15s,box-shadow 0.15s;}
+.mc:hover{border-color:rgba(13,27,75,0.25);}
+.mc.sel{border-color:var(--navy);box-shadow:0 0 0 2px rgba(13,27,75,0.1);}
+.mc-label{font-size:10px;color:var(--navy);opacity:0.55;margin-bottom:5px;line-height:1.3;}
+.mc-val{font-size:20px;font-weight:500;color:var(--navy);}
+.mc-unit{font-size:11px;font-weight:400;opacity:0.5;}
+.badge{position:absolute;top:9px;right:9px;font-size:9px;font-weight:500;padding:2px 7px;border-radius:20px;}
+.b-low{background:rgba(13,27,75,0.07);color:var(--navy);}
+.b-mod{background:var(--gold-faint);color:#7a5500;}
+.b-hi{background:#fff0f0;color:#a32d2d;}
+.b-crit{background:#a32d2d;color:#fff;}
+.b-good{background:rgba(13,27,75,0.07);color:var(--navy);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem;}
+.panel{background:#fff;border:1px solid rgba(13,27,75,0.1);border-radius:12px;padding:1rem 1.25rem;}
+.panel-title{font-size:12px;font-weight:500;color:var(--navy);margin-bottom:1rem;letter-spacing:0.01em;}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;}
+.g-num{font-size:28px;font-weight:500;color:var(--navy);margin-top:4px;}
+.g-sub{font-size:11px;color:var(--navy);opacity:0.45;margin-top:3px;text-align:center;}
+.sbar-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.sbar-lbl{font-size:11px;color:var(--navy);opacity:0.6;width:90px;flex-shrink:0;}
+.sbar-track{flex:1;height:5px;border-radius:3px;background:var(--navy-faint);overflow:hidden;}
+.sbar-fill{height:100%;border-radius:3px;transition:width 0.5s ease;}
+.sbar-val{font-size:11px;color:var(--navy);width:30px;text-align:right;flex-shrink:0;}
+.evt-list{display:flex;flex-direction:column;gap:7px;}
+.evt{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;background:var(--navy-faint);border-radius:8px;}
+.evt-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+.evt-text{font-size:12px;color:var(--navy);line-height:1.4;}
+.evt-time{font-size:10px;color:var(--navy);opacity:0.4;margin-top:2px;}
+.chart-wrap{position:relative;width:100%;height:160px;}
+.sim-row{display:flex;align-items:center;gap:8px;margin-bottom:1.25rem;}
+.sim-label{font-size:11px;color:var(--navy);opacity:0.5;}
+.sim-btn{font-size:11px;padding:5px 14px;border:1px solid rgba(13,27,75,0.2);border-radius:20px;background:transparent;color:var(--navy);cursor:pointer;transition:background 0.12s;}
+.sim-btn:hover{background:var(--navy-faint);}
+.sim-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.foot-row{display:flex;gap:8px;margin-top:1.25rem;}
+.foot-row button{flex:1;font-size:12px;padding:9px;color:var(--navy);border:1px solid rgba(13,27,75,0.2);border-radius:8px;background:transparent;cursor:pointer;transition:background 0.12s;}
+.foot-row button:hover{background:var(--navy-faint);}
+.gold-accent{height:3px;width:40px;background:var(--gold);border-radius:2px;margin-bottom:12px;}
+</style>
+
+<div class="db">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">StepSense AI risk assessment dashboard</h2>
+
+  <div class="topbar">
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <path d="M14 26C20.627 26 26 20.627 26 14S20.627 2 14 2 2 7.373 2 14s5.373 12 12 12z" fill="#0D1B4B"/>
+        <path d="M14 7c-1.8 0-3.2 1.4-3.2 3.2 0 1 .5 1.9 1.2 2.5L9.5 16h9l-2.5-3.3c.7-.6 1.2-1.5 1.2-2.5C17.2 8.4 15.8 7 14 7z" fill="#C9960C"/>
+      </svg>
+      <div>
+        <div style="display:flex;align-items:center;gap:1px;">
+          <span class="brand-step">Step</span><span class="brand-sense">Sense</span>
+        </div>
+        <div class="brand-tagline">Know Your Stride.</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div class="battery-wrap">
+        <span class="battery-label">Insole</span>
+        <div class="battery-body">
+          <div class="battery-fill" id="batFill" style="width:72%;background:#0D1B4B;"></div>
+        </div>
+        <span class="battery-pct" id="batPct">72%</span>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:13px;font-weight:500;color:var(--navy);">Robert M.</div>
+        <div style="font-size:10px;color:var(--navy);opacity:0.45;">72 yrs · 8,241 steps today</div>
+      </div>
+      <div class="live-chip"><div class="dot-pulse"></div>Live</div>
+    </div>
+  </div>
+
+  <div class="gold-accent"></div>
+  <div class="section-label">Active health metrics</div>
+  <div class="mgrid" id="mgrid">
+    <div class="mc sel" data-i="0" onclick="selMetric(0)">
+      <div class="mc-label">Trip danger level</div>
+      <div class="mc-val" id="m0">2.4 <span class="mc-unit">/ 10</span></div>
+      <span class="badge b-low" id="b0">Low</span>
+    </div>
+    <div class="mc" data-i="1" onclick="selMetric(1)">
+      <div class="mc-label">Fall danger velocity</div>
+      <div class="mc-val" id="m1">18 <span class="mc-unit">%</span></div>
+      <span class="badge b-low" id="b1">Low</span>
+    </div>
+    <div class="mc" data-i="2" onclick="selMetric(2)">
+      <div class="mc-label">Imbalance & asymmetry</div>
+      <div class="mc-val" id="m2">31 <span class="mc-unit">%</span></div>
+      <span class="badge b-mod" id="b2">Moderate</span>
+    </div>
+    <div class="mc" data-i="3" onclick="selMetric(3)">
+      <div class="mc-label">Neurological hesitation</div>
+      <div class="mc-val" id="m3">3 <span class="mc-unit">events</span></div>
+      <span class="badge b-low" id="b3">Low</span>
+    </div>
+    <div class="mc" data-i="4" onclick="selMetric(4)">
+      <div class="mc-label">Range of motion</div>
+      <div class="mc-val" id="m4">84 <span class="mc-unit">%</span></div>
+      <span class="badge b-good" id="b4">Good</span>
+    </div>
+  </div>
+
+  <div class="sim-row">
+    <span class="sim-label">Simulate:</span>
+    <button class="sim-btn active" id="s0" onclick="simulate('normal',0)">Normal walk</button>
+    <button class="sim-btn" id="s1" onclick="simulate('fatigue',1)">Fatigue</button>
+    <button class="sim-btn" id="s2" onclick="simulate('risk',2)">High risk</button>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Overall mobility risk</div>
+      <div class="gauge-wrap">
+        <svg width="160" height="88" viewBox="0 0 160 88" aria-hidden="true">
+          <path d="M 12 82 A 68 68 0 0 1 148 82" fill="none" stroke="rgba(13,27,75,0.08)" stroke-width="10" stroke-linecap="round"/>
+          <path id="gfill" d="M 12 82 A 68 68 0 0 1 148 82" fill="none" stroke="#0D1B4B" stroke-width="10" stroke-linecap="round" stroke-dasharray="213.5" stroke-dashoffset="170"/>
+          <text x="80" y="80" text-anchor="middle" font-size="10" fill="#0D1B4B" opacity="0.35">risk score</text>
+        </svg>
+        <div class="g-num" id="gnum">23</div>
+        <div class="g-sub" id="gsub">Low risk — continue normal activity</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Sensor fusion</div>
+      <div>
+        <div class="sbar-row"><span class="sbar-lbl">Pressure matrix</span><div class="sbar-track"><div class="sbar-fill" id="sf0" style="width:78%;background:var(--navy);"></div></div><span class="sbar-val" id="sfv0">78%</span></div>
+        <div class="sbar-row"><span class="sbar-lbl">IMU gyroscope</span><div class="sbar-track"><div class="sbar-fill" id="sf1" style="width:91%;background:var(--navy);"></div></div><span class="sbar-val" id="sfv1">91%</span></div>
+        <div class="sbar-row"><span class="sbar-lbl">Acoustic friction</span><div class="sbar-track"><div class="sbar-fill" id="sf2" style="width:65%;background:var(--navy);"></div></div><span class="sbar-val" id="sfv2">65%</span></div>
+        <div class="sbar-row"><span class="sbar-lbl">Gait rhythm</span><div class="sbar-track"><div class="sbar-fill" id="sf3" style="width:82%;background:var(--navy);"></div></div><span class="sbar-val" id="sfv3">82%</span></div>
+        <div class="sbar-row" style="margin-bottom:0"><span class="sbar-lbl">Tremor detect</span><div class="sbar-track"><div class="sbar-fill" id="sf4" style="width:12%;background:var(--gold);"></div></div><span class="sbar-val" id="sfv4">12%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">7-day fall risk trend</div>
+      <div class="chart-wrap"><canvas id="tc" role="img" aria-label="7-day fall risk trend chart">Low risk maintained over 7 days.</canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Recent events</div>
+      <div class="evt-list" id="evts">
+        <div class="evt"><div class="evt-dot" style="background:var(--navy);"></div><div><div class="evt-text">Normal gait cadence detected</div><div class="evt-time">2 min ago · 112 steps/min</div></div></div>
+        <div class="evt"><div class="evt-dot" style="background:var(--gold);"></div><div><div class="evt-text">Minor asymmetry in left foot pressure</div><div class="evt-time">14 min ago · 4% deviation</div></div></div>
+        <div class="evt"><div class="evt-dot" style="background:var(--navy);"></div><div><div class="evt-text">Stable ankle inversion range</div><div class="evt-time">31 min ago · within safe limits</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot-row">
+    <button onclick="sendPrompt('Explain the Trip Danger Level metric in StepSense and how it is calculated')">About trip danger ↗</button>
+    <button onclick="sendPrompt('What actions should Robert take based on his current StepSense mobility scores?')">Get recommendations ↗</button>
+    <button onclick="sendPrompt('How does StepSense compare to a clinical gait lab for mobility and fall risk assessment?')">vs. clinical lab ↗</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const S={
+  normal:{
+    m:['2.4 <span class="mc-unit">/ 10</span>','18 <span class="mc-unit">%</span>','31 <span class="mc-unit">%</span>','3 <span class="mc-unit">events</span>','84 <span class="mc-unit">%</span>'],
+    b:[['Low','b-low'],['Low','b-low'],['Moderate','b-mod'],['Low','b-low'],['Good','b-good']],
+    g:23,gs:'Low risk — continue normal activity',gCol:'#0D1B4B',
+    sf:[78,91,65,82,12],sc:['#0D1B4B','#0D1B4B','#0D1B4B','#0D1B4B','#C9960C'],
+    td:[18,22,19,17,21,20,18],tc:'#0D1B4B',
+    bat:{pct:72,col:'#0D1B4B'},
+    ev:[
+      {d:'#0D1B4B',t:'Normal gait cadence detected',s:'2 min ago · 112 steps/min'},
+      {d:'#C9960C',t:'Minor asymmetry in left foot pressure',s:'14 min ago · 4% deviation'},
+      {d:'#0D1B4B',t:'Stable ankle inversion range',s:'31 min ago · within safe limits'},
+    ]
+  },
+  fatigue:{
+    m:['5.1 <span class="mc-unit">/ 10</span>','42 <span class="mc-unit">%</span>','54 <span class="mc-unit">%</span>','7 <span class="mc-unit">events</span>','71 <span class="mc-unit">%</span>'],
+    b:[['Moderate','b-mod'],['Moderate','b-mod'],['High','b-hi'],['Moderate','b-mod'],['Fair','b-mod']],
+    g:51,gs:'Moderate risk — consider rest',gCol:'#C9960C',
+    sf:[62,74,81,58,34],sc:['#0D1B4B','#0D1B4B','#C9960C','#C9960C','#C9960C'],
+    td:[18,22,28,35,39,47,51],tc:'#C9960C',
+    bat:{pct:51,col:'#C9960C'},
+    ev:[
+      {d:'#C9960C',t:'Stride shortening — fatigue pattern',s:'1 min ago · −18% stride length'},
+      {d:'#C9960C',t:'Increased heel drag on left foot',s:'9 min ago · acoustic friction elevated'},
+      {d:'#a32d2d',t:'Hesitation event: 0.4s freeze-of-gait',s:'22 min ago · 5.2 Hz tremor'},
+    ]
+  },
+  risk:{
+    m:['8.7 <span class="mc-unit">/ 10</span>','79 <span class="mc-unit">%</span>','82 <span class="mc-unit">%</span>','14 <span class="mc-unit">events</span>','48 <span class="mc-unit">%</span>'],
+    b:[['Critical','b-crit'],['High','b-hi'],['Critical','b-crit'],['High','b-hi'],['Poor','b-hi']],
+    g:82,gs:'High risk — alert caregiver now',gCol:'#a32d2d',
+    sf:[41,88,93,29,78],sc:['#a32d2d','#0D1B4B','#a32d2d','#a32d2d','#a32d2d'],
+    td:[18,29,38,51,63,74,82],tc:'#a32d2d',
+    bat:{pct:18,col:'#a32d2d'},
+    ev:[
+      {d:'#a32d2d',t:'ALERT: Near-fall micro-stumble detected',s:'30s ago · 3.1G deceleration spike'},
+      {d:'#a32d2d',t:'Severe gait asymmetry — 32% imbalance',s:'3 min ago · center-of-pressure shift'},
+      {d:'#C9960C',t:'Multiple freeze-of-gait events in session',s:'7 min ago · 14 events logged'},
+    ]
+  }
+};
+
+let chart;
+function buildChart(data,col){
+  const ctx=document.getElementById('tc').getContext('2d');
+  if(chart)chart.destroy();
+  chart=new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:['Day 1','Day 2','Day 3','Day 4','Day 5','Day 6','Today'],
+      datasets:[{label:'Risk %',data,borderColor:col,backgroundColor:col+'18',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:col,borderWidth:2}]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{min:0,max:100,ticks:{font:{size:9},callback:v=>v+'%'},grid:{color:'rgba(13,27,75,0.05)'}},
+        x:{ticks:{font:{size:9}},grid:{display:false}}
+      }
+    }
+  });
+}
+
+function setGauge(val,col){
+  const pct=val/100,total=213.5,off=total-(total*pct);
+  const f=document.getElementById('gfill');
+  f.style.strokeDashoffset=off;f.style.stroke=col;
+  document.getElementById('gnum').textContent=val;
+}
+
+function setBattery(pct,col){
+  document.getElementById('batFill').style.width=pct+'%';
+  document.getElementById('batFill').style.background=col;
+  document.getElementById('batPct').textContent=pct+'%';
+}
+
+function simulate(name,idx){
+  const s=S[name];
+  for(let i=0;i<5;i++){
+    document.getElementById('m'+i).innerHTML=s.m[i];
+    const b=document.getElementById('b'+i);
+    b.textContent=s.b[i][0];b.className='badge '+s.b[i][1];
+  }
+  setGauge(s.g,s.gCol);
+  document.getElementById('gsub').textContent=s.gs;
+  for(let i=0;i<5;i++){
+    const f=document.getElementById('sf'+i);
+    f.style.width=s.sf[i]+'%';f.style.background=s.sc[i];
+    document.getElementById('sfv'+i).textContent=s.sf[i]+'%';
+  }
+  buildChart(s.td,s.tc);
+  setBattery(s.bat.pct,s.bat.col);
+  document.getElementById('evts').innerHTML=s.ev.map(e=>`<div class="evt"><div class="evt-dot" style="background:${e.d};"></div><div><div class="evt-text">${e.t}</div><div class="evt-time">${e.s}</div></div></div>`).join('');
+  [0,1,2].forEach(i=>{
+    document.getElementById('s'+i).className='sim-btn'+(i===idx?' active':'');
+  });
+}
+
+function selMetric(i){document.querySelectorAll('.mc').forEach((c,j)=>c.classList.toggle('sel',j===i));}
+simulate('normal',0);
+</script>
